@@ -3,13 +3,13 @@
     <table class="table table-hover table-bordered">
       <thead>
         <th># </th>
-        <th>orderID </th>
-        <th>symbol </th>
-        <th>orderQty </th>
-        <th>timestamp </th>
-        <th>side </th>
-        <th>price </th>
-        <th>ordStatus </th>
+        <th>OrderID</th>
+        <th>Symbol</th>
+        <th>OrderQty</th>
+        <th>Timestamp</th>
+        <th>Side</th>
+        <th>Price</th>
+        <th>OrdStatus</th>
       </thead>
       <tbody>
         <tr v-for="(item, i) in history" :key="i">
@@ -34,7 +34,3 @@ export default {
   computed: mapState(['history']),
 }
 </script>
-
-<style>
-
-</style>
