@@ -37,11 +37,4 @@ export default new Vuex.Store({
       }
     },
   },
-  actions: {
-  },
-  modules: {
-  },
-  getters: {
-    // pairName: state => state.instruments[0]
-  }
 })

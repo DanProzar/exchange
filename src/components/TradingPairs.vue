@@ -47,27 +47,10 @@
 </script>
 
 <style lang="less" scoped>
-  @keyframes changed {
-    0% {
-      background-color: rgba(48, 238, 0, 0.5);
-    }
-
-    100% {
-      background-color: rgba(48, 238, 0, 0);
-    }
-  }
-
   table tbody tr {
     cursor: pointer;
     &.active {
       background: rgba(83, 83, 83, 0.226);
-    }
-
-    td.changed {
-      animation-name: changed;
-      animation-duration: 1000ms;
-      animation-iteration-count: 1;
-      animation-timing-function: linear;
     }
   }
 </style>
