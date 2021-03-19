@@ -17,7 +17,7 @@
         
       </div>
       <div class="row history">
-        <div class="col-12 h-100">
+        <div class="col-12">
           <h4>История ордеров</h4>
           <History class="column"/>
         </div>
@@ -42,57 +42,52 @@ export default {
     OrderForm,
     History
   },
-  computed: mapState(['connection', 'msg', 'instrumentData', 'pairName']),
+  computed: mapState(['connection', 'msg', 'instruments', 'pairName']),
   destroyed() {
     this.connection.close()
   },
   async created() {
-    let instrumentData = await this.$makeRequest('GET', 'instrument/active');
-    instrumentData = instrumentData.map(item => {
+    let instruments = await this.$makeRequest('GET', 'instrument/active');
+    instruments = instruments.map(item => {
       const {symbol, lastPrice} = item
       return {symbol, lastPrice}
     })
 
-    let bucketedData = await this.$makeRequest('GET', `trade/bucketed`, {
+    let bucket = await this.$makeRequest('GET', `trade/bucketed`, {
       binSize: '1m',
       partial: false,
       count: 100,
       reverse: true,
-      symbol: instrumentData[0].symbol
+      symbol: instruments[0].symbol
     })
 
-    let historyData = await this.$makeRequest('GET', `order`, {
+    let history = await this.$makeRequest('GET', `order`, {
       reverse: true
     }) 
     
-    this.$store.commit('setData', ['pairName', instrumentData[0].symbol])
-    this.$store.commit('setData', ['instrumentData', instrumentData])
-    this.$store.commit('setData', ['bucketedData', bucketedData])
-    this.$store.commit('setData', ['historyData', historyData])
+    this.$store.commit('setData', ['pairName', instruments[0].symbol])
+    this.$store.commit('setData', ['instruments', instruments])
+    this.$store.commit('setData', ['bucket', bucket])
+    this.$store.commit('setData', ['history', history])
 
-    this.connection.onopen = () => console.log('Connection opened')
-    this.connection.onclose = reason => console.log(`Connection closed: ${reason.message}`)
+    this.connection.onopen = () => console.log('Connesscsstion opened')
+    this.connection.onclose = reason => console.log('Connesscsstion closed')
 
     this.connection.onmessage = event => {
       const {table, action, data} = JSON.parse(event.data)
-      if (table == 'tradeBin1m') {
-        if (action == 'insert')
-        data.map(bucket => {
-          this.$store.commit('pushBucket', bucket)
-        })
-      } else if (table == 'instrument') {
-        if (data && action == 'update') {
-          data.map(item => {
-            if (item.symbol[0] !== '.') {
-              const {lastPrice, symbol} = item
-              const index = this.instrumentData.findIndex(el => el.symbol == symbol.slice(1, symbol.length - 1))
-              if (lastPrice && index !== -1) {
-                this.$store.commit('update', {price: lastPrice, index}) 
-              }
-            }
-            // item.symbol == this.msg.symbol && this.msg.lastPrice ? data[i].lastPrice = this.msg.lastPrice : null
-          })
-        }
+      switch(table) {
+        case 'tradeBin1m': {
+          if (action == 'insert') {
+            data.map(bucket => {
+              this.$store.commit('pushBucket', bucket)
+            })
+          }
+        } break;
+        case 'instrument': {
+          if (data && action == 'update') {
+            this.$store.commit('INSTRUMENTS_ONMESSAGE', data)
+          }
+        } break
       }
     }
 
@@ -111,9 +106,10 @@ export default {
     max-height: 100%;
   }
   .history {
-    max-height: 35vh;
     margin-top: 70px;
-    overflow-y: scroll;
+    .col-12 {
+      max-height: 33vh;
+    }
   }
   table {
     th, td { 

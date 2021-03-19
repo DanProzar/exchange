@@ -11,7 +11,7 @@
         <th>Gross</th>
       </thead>
       <tbody>
-        <tr v-for="(bucket, i) in bucketedData" :key="i">
+        <tr v-for="(bucket, i) in bucket" :key="i">
           <td><b>{{i + 1}}</b></td>
           <td>{{time(bucket.timestamp)}}</td>
           <td>{{bucket.open}}</td>
@@ -35,7 +35,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['bucketedData', 'instrumentData', 'connection', 'pairName']),
+    ...mapState(['bucket', 'instruments', 'connection', 'pairName']),
   },
   methods: {
     time(date) {
@@ -44,7 +44,7 @@ export default {
     }
   },
   watch: {
-    bucketedData: function (newVal, oldVal) {
+    bucket: function (newVal, oldVal) {
       if (newVal.length == 100) {
         if (oldVal.length >= 100) {
           this.connection.send(`{"op": "unsubscribe", "args": "tradeBin1m:${oldVal[0].symbol}"}`)

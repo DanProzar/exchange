@@ -5,9 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    instrumentData: [],
-    bucketedData: [],
-    historyData: [],
+    instruments: [],
+    bucket: [],
+    history: [],
     connection: new WebSocket(process.env.VUE_APP_WS_URL),
     pairName: '',
   },
@@ -18,21 +18,30 @@ export default new Vuex.Store({
     setPairName(state, name) {
       state.pairName = name
     },
-    pushBucket(state, data) {
-      state.bucketedData.unshift(data)
+    pushBucket(state, bucket) {
+      state.bucket.unshift(bucket)
     },
-    update(state, {index, price}) {
-      Vue.set(state.instrumentData, index, {
-        ...state.instrumentData[index],
-        lastPrice: price
-      })
-    }
+    INSTRUMENTS_ONMESSAGE(state, data) {
+      if (data) {
+        data.forEach((el) => {
+          if (!el.lastPrice) return;
+          const i = state.instruments
+            .map((item) => item.symbol)
+            .indexOf(el.symbol);
+          if (i === -1) {
+            state.instruments.push(el);
+          } else {
+            state.instruments[i].lastPrice = el.lastPrice;
+          }
+        });
+      }
+    },
   },
   actions: {
   },
   modules: {
   },
   getters: {
-    // pairName: state => state.instrumentData[0]
+    // pairName: state => state.instruments[0]
   }
 })

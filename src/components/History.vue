@@ -12,7 +12,7 @@
         <th>ordStatus </th>
       </thead>
       <tbody>
-        <tr v-for="(item, i) in historyData" :key="i">
+        <tr v-for="(item, i) in history" :key="i">
           <td><b>{{i + 1}}</b></td>
           <td>{{item.orderID}}</td>
           <td>{{item.symbol}}</td>
@@ -31,7 +31,7 @@
 import {mapState} from 'vuex'
 export default {
   name: "History",
-  computed: mapState(['historyData']),
+  computed: mapState(['history']),
 }
 </script>
 
