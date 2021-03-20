@@ -51,9 +51,7 @@ export default {
         }
         this.connection.send(`{"op": "subscribe", "args": "tradeBin1m:${this.pairName}"}`)
       } 
-
     },
-    
   },
 }
 </script>

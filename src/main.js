@@ -4,7 +4,6 @@ import store from './store'
 import makeRequest from './plugins/rest'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-//STYLES
 import "./assets/less/style.less"
 
 Vue.use(makeRequest)

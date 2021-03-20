@@ -10,7 +10,7 @@
           <h4>Истории котировок для <b>{{pairName}}</b></h4>
           <ListPairs class="column"/>
         </div>
-         <div class="col-lg-3 h-100"> <!--justify-content-center align-items-center d-flex -->
+         <div class="col-lg-3 h-100">
           <h4>Создания ордера</h4>
           <OrderForm />
         </div>
@@ -23,7 +23,6 @@
         </div>
       </div>
     </div>
-    <!-- <button @click='sendData(`{"op": "subscribe", "args": "instrument"}`)'>Get Instrument Data</button> -->
   </div>
 </template>
 
@@ -70,8 +69,8 @@ export default {
     this.$store.commit('setData', ['bucket', bucket])
     this.$store.commit('setData', ['history', history])
 
-    this.connection.onopen = () => console.log('Connesscsstion opened')
-    this.connection.onclose = reason => console.log('Connesscsstion closed')
+    this.connection.onopen = () => console.log('Connection opened')
+    this.connection.onclose = () => console.log('Connection closed')
 
     this.connection.onmessage = event => {
       const {table, action, data} = JSON.parse(event.data)
