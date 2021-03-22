@@ -21,18 +21,19 @@ export default new Vuex.Store({
     pushBucket(state, bucket) {
       state.bucket.unshift(bucket)
     },
-    INSTRUMENTS_ONMESSAGE(state, data) {
-      if (data) {
-        data.forEach((el) => {
+    INSTRUMENTS_ONMESSAGE(state, event) {
+      if (event) {
+        const tbody = document.getElementById('tbody')
+        
+        event.forEach((el) => {
           if (!el.lastPrice) return;
           const i = state.instruments
             .map((item) => item.symbol)
             .indexOf(el.symbol);
-          if (i === -1) {
-            state.instruments.push(el);
-          } else {
+          if (i !== -1) {
+            tbody.children[i].classList.add('changed')
             state.instruments[i].lastPrice = el.lastPrice;
-          }
+          } 
         });
       }
     },

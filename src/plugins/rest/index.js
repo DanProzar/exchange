@@ -2,8 +2,8 @@ import fetch from 'node-fetch';
 import crypto from 'crypto';
 import qs from 'qs';
 
-const apiKey = '_UsrrJSsY6wIzwej4LG98bA9';
-const apiSecret = 'JBWqoMYP4lia_B8w-cgwoQCi_HhyuymJfvELxYp33qalAq-W';
+const apiKey = process.env.VUE_APP_API_KEY;
+const apiSecret = process.env.VUE_APP_API_SECRET;
 
 export default {
   install(Vue) {

@@ -11,14 +11,14 @@
         <th>Gross</th>
       </thead>
       <tbody>
-        <tr v-for="(bucket, i) in bucket" :key="i">
+        <tr v-for="(el, i) in bucket" :key="i">
           <td><b>{{i + 1}}</b></td>
-          <td>{{time(bucket.timestamp)}}</td>
-          <td>{{bucket.open}}</td>
-          <td>{{bucket.high}}</td>
-          <td>{{bucket.low}}</td>
-          <td>{{bucket.close}}</td>
-          <td>{{bucket.trades}}</td>
+          <td>{{time(el.timestamp)}}</td>
+          <td>{{el.open}}</td>
+          <td>{{el.high}}</td>
+          <td>{{el.low}}</td>
+          <td>{{el.close}}</td>
+          <td>{{el.trades}}</td>
         </tr>
       </tbody>
     </table>
@@ -29,11 +29,6 @@
 import {mapState} from 'vuex'
 export default {
   name: "ListPairs",
-  data() {
-    return {
-      dataToInsert: null
-    }
-  },
   computed: {
     ...mapState(['bucket', 'instruments', 'connection', 'pairName']),
   },
@@ -42,16 +37,6 @@ export default {
       date = new Date(date)
       return date.toLocaleTimeString()
     }
-  },
-  watch: {
-    bucket: function (newVal, oldVal) {
-      if (newVal.length == 100) {
-        if (oldVal.length >= 100) {
-          this.connection.send(`{"op": "unsubscribe", "args": "tradeBin1m:${oldVal[0].symbol}"}`)
-        }
-        this.connection.send(`{"op": "subscribe", "args": "tradeBin1m:${this.pairName}"}`)
-      } 
-    },
   },
 }
 </script>

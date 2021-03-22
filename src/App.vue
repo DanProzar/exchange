@@ -47,10 +47,10 @@ export default {
   },
   async created() {
     let instruments = await this.$makeRequest('GET', 'instrument/active');
-    instruments = instruments.map(item => {
-      const {symbol, lastPrice} = item
-      return {symbol, lastPrice}
-    })
+    // instruments = instruments.map(item => {
+    //   const {symbol, lastPrice} = item
+    //   return {symbol, lastPrice}
+    // })
 
     let bucket = await this.$makeRequest('GET', `trade/bucketed`, {
       binSize: '1m',
@@ -74,20 +74,10 @@ export default {
 
     this.connection.onmessage = event => {
       const {table, action, data} = JSON.parse(event.data)
-      switch(table) {
-        case 'tradeBin1m': {
-          if (action == 'insert') {
-            data.map(bucket => {
-              this.$store.commit('pushBucket', bucket)
-            })
-          }
-        } break;
-        case 'instrument': {
-          if (data && action == 'update') {
-            this.$store.commit('INSTRUMENTS_ONMESSAGE', data)
-          }
-        } break
-      }
+      if (table == 'instrument') {
+      if (data && action == 'update') {
+        this.$store.commit('INSTRUMENTS_ONMESSAGE', data)
+      }}
     }
 
     this.connection.send(`{"op": "subscribe", "args": "instrument"}`)
