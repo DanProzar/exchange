@@ -52,8 +52,5 @@
     &.active {
       background: rgba(83, 83, 83, 0.226);
     }
-    &.changed {
-      background: rgba(5, 226, 60, 0.664);
-    }
   }
 </style>
